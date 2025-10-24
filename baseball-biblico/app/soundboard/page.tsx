@@ -1,45 +1,55 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
 
-// Placeholder sound buttons - will be replaced with actual mp3 files
+// Sound files from public/sounds directory
 const soundButtons = [
-  { id: 1, label: 'Sound 1', file: '' },
-  { id: 2, label: 'Sound 2', file: '' },
-  { id: 3, label: 'Sound 3', file: '' },
-  { id: 4, label: 'Sound 4', file: '' },
-  { id: 5, label: 'Sound 5', file: '' },
-  { id: 6, label: 'Sound 6', file: '' },
-  { id: 7, label: 'Sound 7', file: '' },
-  { id: 8, label: 'Sound 8', file: '' },
-  { id: 9, label: 'Sound 9', file: '' },
-  { id: 10, label: 'Sound 10', file: '' },
-  { id: 11, label: 'Sound 11', file: '' },
-  { id: 12, label: 'Sound 12', file: '' },
+  { id: 1, label: 'Baseball Classic Charge', file: '/sounds/baseball classic charge.mp3' },
+  { id: 2, label: 'Baseball Out', file: '/sounds/baseball-out.mp3' },
+  { id: 3, label: 'Bye Bye Bye', file: '/sounds/bye bye bye.mp3' },
+  { id: 4, label: 'Charge Baseball', file: '/sounds/charge baseball.mp3' },
+  { id: 5, label: 'Charge Baseball Organ', file: '/sounds/charge-baseball-organ.mp3' },
+  { id: 6, label: 'Coqui', file: '/sounds/coqui.mp3' },
+  { id: 7, label: 'The Final Countdown Chorus', file: '/sounds/europe_-_the_final_countdown_chorus-1.mp3' },
+  { id: 8, label: 'Pac Man Startup', file: '/sounds/pac-man-startup.mp3' },
+  { id: 9, label: 'Seven Nation Army', file: '/sounds/seven-nation-army-goaltune.mp3' },
+  { id: 10, label: 'Eye of the Tiger', file: '/sounds/survivor-eye-of-the-tiger-ringtone-youtube.mp3' },
+  { id: 11, label: 'The Final Countdown', file: '/sounds/the-final-countdown.mp3' },
+  { id: 12, label: 'We Will Rock You', file: '/sounds/we-will-rock-you.mp3' },
+  { id: 13, label: 'Winner Bell', file: '/sounds/winner-bell-game-show-sound-effect.mp3' },
+  { id: 14, label: 'Yo Te Extrañaré', file: '/sounds/yo_te_extranare.mp3' },
+  { id: 15, label: 'Among Us Sus', file: '/sounds/among-us-sus.mp3' },
+  { id: 16, label: 'Boxing Bell', file: '/sounds/boxing-bell.mp3' },
+  { id: 17, label: "Can't Hold Us", file: '/sounds/cant-hold-us.mp3' },
+  { id: 18, label: 'Spiderman Meme Song', file: '/sounds/spiderman-meme-song.mp3' },
+  { id: 19, label: 'Victory Sound', file: '/sounds/victory_sound.mp3' },
 ];
 
 export default function Soundboard() {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const playSound = (id: number, file: string) => {
-    if (!file) {
-      alert('Sound file not configured yet');
-      return;
+    // Stop currently playing sound if there is one
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
 
-    // Stop currently playing sound
-    if (currentlyPlaying !== null) {
-      setCurrentlyPlaying(null);
-    }
-
-    // Play new sound
+    // Create and play new sound
     const audio = new Audio(file);
-    audio.play();
+    audioRef.current = audio;
     setCurrentlyPlaying(id);
+
+    audio.play().catch((error) => {
+      console.error('Error playing audio:', error);
+      setCurrentlyPlaying(null);
+    });
 
     audio.onended = () => {
       setCurrentlyPlaying(null);
+      audioRef.current = null;
     };
   };
 
@@ -64,7 +74,7 @@ export default function Soundboard() {
                 key={button.id}
                 onClick={() => playSound(button.id, button.file)}
                 className={`
-                  relative p-6 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg
+                  relative p-6 rounded-xl font-bold text-sm transition-all duration-200 shadow-lg
                   ${
                     currentlyPlaying === button.id
                       ? 'bg-green-600 text-white scale-95 shadow-xl'
@@ -78,15 +88,15 @@ export default function Soundboard() {
                   <span className="text-3xl">
                     {currentlyPlaying === button.id ? '🔊' : '🎵'}
                   </span>
-                  <span>{button.label}</span>
+                  <span className="text-center leading-tight">{button.label}</span>
                 </div>
               </button>
             ))}
           </div>
 
-          <div className="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-600 rounded">
-            <p className="text-yellow-900 text-sm">
-              <strong>Nota:</strong> Los archivos de sonido MP3 se configurarán próximamente.
+          <div className="mt-8 p-4 bg-blue-50 border-l-4 border-blue-600 rounded">
+            <p className="text-blue-900 text-sm">
+              <strong>Tip:</strong> Presionar un botón mientras otro sonido está reproduciéndose detendrá el sonido actual automáticamente.
             </p>
           </div>
         </div>
