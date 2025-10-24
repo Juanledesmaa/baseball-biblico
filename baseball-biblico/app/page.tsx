@@ -16,7 +16,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
             <Link
               href="/preguntas"
               className="group bg-white hover:bg-red-50 rounded-2xl shadow-2xl p-12 transition-all duration-300 hover:scale-105 hover:shadow-red-500/50"
@@ -30,6 +30,23 @@ export default function Home() {
                 </h2>
                 <p className="text-gray-600">
                   Reglas y preguntas del juego
+                </p>
+              </div>
+            </Link>
+
+            <Link
+              href="/presentacion"
+              className="group bg-white hover:bg-purple-50 rounded-2xl shadow-2xl p-12 transition-all duration-300 hover:scale-105 hover:shadow-purple-500/50"
+            >
+              <div className="flex flex-col items-center text-center">
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
+                  📺
+                </div>
+                <h2 className="text-3xl font-bold text-purple-700 mb-2">
+                  Presentación
+                </h2>
+                <p className="text-gray-600">
+                  Mostrar preguntas en pantalla
                 </p>
               </div>
             </Link>

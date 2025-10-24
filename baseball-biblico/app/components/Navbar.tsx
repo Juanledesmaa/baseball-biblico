@@ -25,6 +25,16 @@ export default function Navbar() {
               Preguntas
             </Link>
             <Link
+              href="/presentacion"
+              className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                pathname === '/presentacion'
+                  ? 'bg-white text-red-700'
+                  : 'bg-red-800 text-white hover:bg-red-900'
+              }`}
+            >
+              Presentación
+            </Link>
+            <Link
               href="/soundboard"
               className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
                 pathname === '/soundboard'
