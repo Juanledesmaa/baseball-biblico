@@ -8,15 +8,15 @@ export default function Navbar() {
 
   return (
     <nav className="bg-red-700 shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-white text-2xl font-bold">
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-24">
+          <Link href="/" className="text-white text-4xl font-bold">
             ⚾ Baseball Bíblico
           </Link>
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <Link
               href="/preguntas"
-              className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+              className={`px-8 py-4 rounded-lg text-xl font-semibold transition-colors ${
                 pathname === '/preguntas'
                   ? 'bg-white text-red-700'
                   : 'bg-red-800 text-white hover:bg-red-900'
@@ -26,7 +26,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/presentacion"
-              className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+              className={`px-8 py-4 rounded-lg text-xl font-semibold transition-colors ${
                 pathname === '/presentacion'
                   ? 'bg-white text-red-700'
                   : 'bg-red-800 text-white hover:bg-red-900'
@@ -36,7 +36,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/soundboard"
-              className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+              className={`px-8 py-4 rounded-lg text-xl font-semibold transition-colors ${
                 pathname === '/soundboard'
                   ? 'bg-white text-red-700'
                   : 'bg-red-800 text-white hover:bg-red-900'

@@ -209,26 +209,26 @@ export default function Presentacion() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-red-800 to-blue-900 flex flex-col items-center justify-center p-8">
         {/* Question Display */}
-        <div className="w-full max-w-6xl">
-          <div className="bg-white rounded-3xl shadow-2xl p-12 mb-6">
-            <div className="text-center mb-8">
-              <span className="inline-block bg-red-700 text-white text-3xl font-bold px-8 py-4 rounded-full mb-6">
+        <div className="w-full max-w-7xl">
+          <div className="bg-white rounded-3xl shadow-2xl p-16 mb-8">
+            <div className="text-center mb-12">
+              <span className="inline-block bg-red-700 text-white text-6xl font-bold px-12 py-6 rounded-full mb-8">
                 Pregunta #{currentQuestion.number}
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-blue-900 text-center leading-tight mb-8">
+            <h1 className="text-7xl md:text-8xl font-bold text-blue-900 text-center leading-tight mb-12">
               {currentQuestion.question}
             </h1>
 
             {showOptions && (
-              <div className="mt-12 space-y-4">
+              <div className="mt-16 space-y-6">
                 {currentQuestion.options.map((option, index) => (
                   <div
                     key={index}
-                    className="bg-gray-100 p-6 rounded-xl text-3xl text-gray-800 font-semibold"
+                    className="bg-gray-100 p-8 rounded-xl text-5xl text-gray-800 font-semibold"
                   >
-                    {option}
+                    {option.replace(' ✅', '')}
                   </div>
                 ))}
               </div>
@@ -236,17 +236,17 @@ export default function Presentacion() {
           </div>
 
           {/* Controls */}
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-6 justify-center">
             <button
               onClick={handleBack}
-              className="bg-white text-red-700 px-8 py-4 rounded-xl text-2xl font-bold hover:bg-gray-100 transition-colors shadow-lg"
+              className="bg-white text-red-700 px-12 py-6 rounded-xl text-3xl font-bold hover:bg-gray-100 transition-colors shadow-lg"
             >
               ← Volver al Grid
             </button>
             {!showOptions && (
               <button
                 onClick={() => setShowOptions(true)}
-                className="bg-green-600 text-white px-8 py-4 rounded-xl text-2xl font-bold hover:bg-green-700 transition-colors shadow-lg"
+                className="bg-green-600 text-white px-12 py-6 rounded-xl text-3xl font-bold hover:bg-green-700 transition-colors shadow-lg"
               >
                 Mostrar Opciones
               </button>
@@ -261,28 +261,28 @@ export default function Presentacion() {
     <div className="min-h-screen bg-slate-50">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-2xl p-8">
-          <h1 className="text-4xl font-bold text-red-700 mb-4 text-center">
+        <div className="bg-white rounded-lg shadow-2xl p-12">
+          <h1 className="text-6xl font-bold text-red-700 mb-6 text-center">
             📺 Modo Presentación
           </h1>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 text-2xl mb-12">
             Selecciona el número de pregunta para mostrarla en pantalla completa
           </p>
 
-          <div className="grid grid-cols-6 md:grid-cols-9 gap-3">
+          <div className="grid grid-cols-6 md:grid-cols-9 gap-4">
             {questions.map((q) => (
               <button
                 key={q.number}
                 onClick={() => handleQuestionClick(q.number)}
-                className="aspect-square bg-gradient-to-br from-red-600 to-red-700 text-white text-2xl font-bold rounded-xl hover:from-red-700 hover:to-red-800 hover:scale-110 transition-all shadow-lg border-4 border-red-900"
+                className="aspect-square bg-gradient-to-br from-red-600 to-red-700 text-white text-4xl font-bold rounded-xl hover:from-red-700 hover:to-red-800 hover:scale-110 transition-all shadow-lg border-4 border-red-900"
               >
                 {q.number}
               </button>
             ))}
           </div>
 
-          <div className="mt-8 p-4 bg-blue-50 border-l-4 border-blue-600 rounded">
-            <p className="text-blue-900 text-sm">
+          <div className="mt-12 p-6 bg-blue-50 border-l-4 border-blue-600 rounded">
+            <p className="text-blue-900 text-xl">
               <strong>Instrucciones:</strong> Haz clic en un número para mostrar la pregunta en modo presentación.
               Una vez en la pregunta, puedes mostrar las opciones múltiples si es necesario.
             </p>
