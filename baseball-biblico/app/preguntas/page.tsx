@@ -1,18 +1,41 @@
+"use client";
+
 import Navbar from '../components/Navbar';
+import { useEffect, useState } from 'react';
+import * as qsES from './questions.es';
+import * as qsEN from './questions.en';
+
+type Q = {
+  id: number;
+  question: string;
+  options?: string[];
+  correct?: number;
+};
 
 export default function Preguntas() {
+  const [lang, setLang] = useState<'es' | 'en'>('es');
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('lang');
+      if (stored === 'en' || stored === 'es') setLang(stored);
+      else if (document.documentElement.lang === 'en') setLang('en');
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  const round1: Q[] = lang === 'en' ? (qsEN.round1 as Q[]) : (qsES.round1 as Q[]);
+  const round3: string[] = lang === 'en' ? (qsEN as any).round3Prompts ?? [] : (qsES as any).round3Prompts ?? [];
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-4xl font-bold text-red-700 mb-6 text-center">
-            ⚾ Baseball Bíblico
-          </h1>
+          <h1 className="text-4xl font-bold text-red-700 mb-6 text-center">⚾ Baseball Bíblico</h1>
 
-          <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">
-            Reglas para el Jurado
-          </h2>
+          <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">Reglas para el Jurado</h2>
 
           <section className="mb-8">
             <h3 className="text-xl font-bold text-red-700 mb-3">🏁 Estructura del Juego</h3>
@@ -112,207 +135,40 @@ export default function Preguntas() {
           </div>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">
-              PREGUNTAS RONDA 1
-            </h2>
+            <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">PREGUNTAS RONDA 1</h2>
 
-            {/* Question 1 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">1) Según <strong>Mateo 6:33</strong>, ¿qué debemos buscar primero?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) El pan diario</li>
-                <li>B) La fama</li>
-                <li className="text-green-700 font-bold">C) ✅ El reino de Dios y su justicia</li>
-                <li>D) Los bienes materiales</li>
-              </ul>
-            </div>
+            {round1.map((q) => (
+              <div key={q.id} className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <p className="font-semibold mb-2">{q.id}) {q.question.replace(/\n/g, ' ')}</p>
+                {q.options ? (
+                  <ul className="ml-6 space-y-1">
+                    {q.options.map((opt, i) => (
+                      <li key={i} className={i === q.correct ? 'text-green-700 font-bold' : undefined}>
+                        {String.fromCharCode(65 + i)}) {opt}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            ))}
+          </section>
 
-            {/* Question 2 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">2) Según <strong>Mateo 5:5</strong>, ¿qué heredarán los humildes?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) El cielo</li>
-                <li>B) La ciudad santa</li>
-                <li className="text-green-700 font-bold">C) ✅ Toda la tierra</li>
-                <li>D) Una corona</li>
-              </ul>
-            </div>
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">PREGUNTAS RONDA 3</h2>
+            <p className="mb-4 italic text-gray-700">(Las respuestas de estas preguntas deberán ser analizadas por el jurado para determinar si son correctas)</p>
 
-            {/* Question 3 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">3) Según <strong>Mateo 7:7</strong>, Jesús dice: "Pidan, y…"</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) No se les dará</li>
-                <li className="text-green-700 font-bold">B) ✅ Recibirán</li>
-                <li>C) Buscarán</li>
-                <li>D) Esperarán en vano</li>
-              </ul>
-            </div>
+            {round3.map((prompt, idx) => (
+              <div key={idx} className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
+                <p className="font-semibold mb-2">{prompt}</p>
+              </div>
+            ))}
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-            {/* Question 4 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">4) Según <strong>Mateo 5:3</strong>, "Dios bendice a los que son pobres en espíritu…". ¿Qué les pertenece?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) La tierra</li>
-                <li>B) El consuelo</li>
-                <li className="text-green-700 font-bold">C) ✅ El reino del cielo</li>
-                <li>D) La misericordia</li>
-              </ul>
-            </div>
-
-            {/* Question 5 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">5) Según <strong>Mateo 5:13</strong>, Jesús dice que sus seguidores son "la sal de…"</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) La vida</li>
-                <li>B) Jerusalén</li>
-                <li className="text-green-700 font-bold">C) ✅ La tierra</li>
-                <li>D) La ley</li>
-              </ul>
-            </div>
-
-            {/* Question 6 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">6) Según <strong>Mateo 6:6</strong>, cuando oremos debemos hacerlo…</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) En la calle</li>
-                <li>B) En voz alta</li>
-                <li className="text-green-700 font-bold">C) ✅ En privado, en nuestra habitación</li>
-                <li>D) En grupo</li>
-              </ul>
-            </div>
-
-            {/* Question 7 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">7) Según <strong>Mateo 5:7</strong>, los compasivos recibirán…</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Paz</li>
-                <li className="text-green-700 font-bold">B) ✅ Compasión</li>
-                <li>C) Riquezas</li>
-                <li>D) Visión</li>
-              </ul>
-            </div>
-
-            {/* Question 8 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">8) Según <strong>Mateo 7:24</strong>, ¿a qué compara Jesús a quien escucha sus palabras y las pone en práctica?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) A un sembrador</li>
-                <li className="text-green-700 font-bold">B) ✅ A un hombre prudente que construyó su casa sobre la roca</li>
-                <li>C) A un pescador</li>
-                <li>D) A un profeta</li>
-              </ul>
-            </div>
-
-            {/* Question 9 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">9) Según <strong>Mateo 6:21</strong>, ¿dónde estará tu corazón?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Donde estén tus pensamientos</li>
-                <li className="text-green-700 font-bold">B) ✅ Donde esté tu tesoro</li>
-                <li>C) Donde esté tu familia</li>
-                <li>D) Donde esté tu casa</li>
-              </ul>
-            </div>
-
-            {/* Question 10 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">10) Según <strong>Mateo 5:9</strong>, los que trabajan por la paz serán llamados…</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Siervos fieles</li>
-                <li className="text-green-700 font-bold">B) ✅ Hijos de Dios</li>
-                <li>C) Profetas</li>
-                <li>D) Discípulos de Juan</li>
-              </ul>
-            </div>
-
-            {/* Question 11 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">11) Según <strong>Mateo 5:17</strong>, Jesús vino no para abolir sino para cumplir…</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Las tradiciones</li>
-                <li>B) Las parábolas</li>
-                <li className="text-green-700 font-bold">C) ✅ La ley y los profetas</li>
-                <li>D) Los pactos humanos</li>
-              </ul>
-            </div>
-
-            {/* Question 12 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">12) Según <strong>Mateo 6:19</strong>, ¿qué no debemos hacer?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Trabajar demasiado</li>
-                <li className="text-green-700 font-bold">B) ✅ Acumular tesoros en la tierra</li>
-                <li>C) Compartir con los demás</li>
-                <li>D) Orar en público</li>
-              </ul>
-            </div>
-
-            {/* Question 13 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">13) Según <strong>Mateo 5:8</strong>, los de corazón puro verán…</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Ángeles</li>
-                <li className="text-green-700 font-bold">B) ✅ A Dios</li>
-                <li>C) El reino humano</li>
-                <li>D) La ciudad de David</li>
-              </ul>
-            </div>
-
-            {/* Question 14 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">14) Según <strong>Mateo 5:10</strong>, ¿a quiénes bendice Dios por causa de la justicia?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) A los pobres</li>
-                <li>B) A los humildes</li>
-                <li className="text-green-700 font-bold">C) ✅ A los perseguidos</li>
-                <li>D) A los sabios</li>
-              </ul>
-            </div>
-
-            {/* Question 15 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">15) Según <strong>Mateo 6:9–10</strong>, ¿cómo comienza el Padre Nuestro?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) "Padre amado del cielo"</li>
-                <li className="text-green-700 font-bold">B) ✅ "Padre nuestro que estás en los cielos…"</li>
-                <li>C) "Dios todopoderoso y justo"</li>
-                <li>D) "Oh Señor celestial"</li>
-              </ul>
-            </div>
-
-            {/* Question 16 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">16) Según <strong>Mateo 5:6</strong>, los que tienen hambre y sed de justicia serán…</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Perdonados</li>
-                <li className="text-green-700 font-bold">B) ✅ Saciados</li>
-                <li>C) Exaltados</li>
-                <li>D) Librados</li>
-              </ul>
-            </div>
-
-            {/* Question 17 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">17) Según <strong>Mateo 5:39</strong>, ¿qué dice Jesús que hagamos si alguien nos da una bofetada en la mejilla derecha?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Golpearlo de vuelta</li>
-                <li className="text-green-700 font-bold">B) ✅ Ofrecer la otra mejilla también</li>
-                <li>C) Llamar a los guardias</li>
-                <li>D) Ignorarlo</li>
-              </ul>
-            </div>
-
-            {/* Question 18 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">18) Según <strong>Mateo 7:12</strong>, ¿cómo se llama la enseñanza "trata a los demás como quieres que te traten"?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Mandamiento nuevo</li>
-                <li className="text-green-700 font-bold">B) ✅ Regla de oro</li>
-                <li>C) Parábola de oro</li>
-                <li>D) Ley de Moisés</li>
-              </ul>
-            </div>
 
             {/* Question 19 */}
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -468,114 +324,4 @@ export default function Preguntas() {
               </ul>
             </div>
 
-            {/* Question 33 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">33) Según <strong>Mateo 5:37</strong>, ¿qué debe significar nuestro "sí" y nuestro "no"?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Depende del momento</li>
-                <li className="text-green-700 font-bold">B) ✅ Simplemente sí o no, nada más</li>
-                <li>C) Lo que convenga</li>
-                <li>D) Lo que los demás quieran oír</li>
-              </ul>
-            </div>
 
-            {/* Question 34 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">34) Según <strong>Mateo 7:3</strong>, ¿qué compara Jesús con una "viga"?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) El pecado grande de los demás</li>
-                <li className="text-green-700 font-bold">B) ✅ Los errores que no vemos en nosotros mismos</li>
-                <li>C) Las leyes antiguas</li>
-                <li>D) La fe de los hipócritas</li>
-              </ul>
-            </div>
-
-            {/* Question 35 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">35) Según <strong>Mateo 7:6</strong>, ¿qué dice Jesús que no demos a los perros o a los cerdos?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) Pan</li>
-                <li>B) Oro</li>
-                <li className="text-green-700 font-bold">C) ✅ Cosas sagradas o valiosas</li>
-                <li>D) Piedras</li>
-              </ul>
-            </div>
-
-            {/* Question 36 */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="font-semibold mb-2">36) Según <strong>Mateo 7:15</strong>, ¿de qué advierte Jesús a sus seguidores?</p>
-              <ul className="ml-6 space-y-1">
-                <li>A) De las tentaciones</li>
-                <li className="text-green-700 font-bold">B) ✅ De los falsos profetas vestidos como ovejas</li>
-                <li>C) De los soldados romanos</li>
-                <li>D) De los escribas</li>
-              </ul>
-            </div>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">
-              RONDA 2
-            </h2>
-            <div className="bg-yellow-100 border-l-4 border-yellow-600 p-4">
-              <p className="text-yellow-900 font-semibold">
-                Las preguntas de la 2da ronda serán dadas por los equipos contra sus equipos en contra.
-              </p>
-            </div>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-blue-900 mb-4 border-b-2 border-red-700 pb-2">
-              PREGUNTAS RONDA 3
-            </h2>
-            <p className="mb-4 italic text-gray-700">
-              (Las respuestas de estas preguntas deberán ser analizadas por el jurado para determinar si son correctas)
-            </p>
-
-            <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
-              <p className="font-semibold mb-2">
-                En <strong>Mateo 5:13</strong>, Jesús dice que si la sal pierde su sabor "ya no sirve para nada".
-              </p>
-              <p className="text-purple-900">¿Qué significa esto en relación con la vida del creyente?</p>
-            </div>
-
-            <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
-              <p className="font-semibold mb-2">
-                Según <strong>Mateo 7:21–23</strong>, no todos los que dicen "Señor, Señor" entrarán al Reino de los Cielos.
-              </p>
-              <p className="text-purple-900">¿Qué distingue a los verdaderos discípulos?</p>
-            </div>
-
-            <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
-              <p className="font-semibold mb-2">
-                En <strong>Mateo 7:16–20</strong>, Jesús dice "por sus frutos los conocerán".
-              </p>
-              <p className="text-purple-900">¿Qué representa el "fruto" en la vida de una persona?</p>
-            </div>
-
-            <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
-              <p className="font-semibold mb-2">
-                En <strong>Mateo 5:38–39</strong>, Jesús enseña a "poner la otra mejilla".
-              </p>
-              <p className="text-purple-900">¿Cómo interpretas esto?</p>
-            </div>
-
-            <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
-              <p className="font-semibold mb-2">
-                En <strong>Mateo 7:13–14</strong>, Jesús menciona la puerta angosta y la puerta ancha.
-              </p>
-              <p className="text-purple-900">¿Qué representa realmente esa metáfora?</p>
-            </div>
-
-            <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
-              <p className="font-semibold mb-2">
-                En <strong>Mateo 6:19–21</strong>, Jesús dice que donde está tu tesoro, allí estará tu corazón.
-              </p>
-              <p className="text-purple-900">¿Qué significa eso?</p>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
-  );
-}
